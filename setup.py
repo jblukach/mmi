@@ -16,10 +16,13 @@ setup(
     author_email = "help@lukach.io",
     license = "Apache-2.0",
     packages = ["mmi"],
-    install_requires = ["aiofile","pybloomfiltermmap3"],
+    install_requires = ["pybloomfiltermmap3"],
     zip_safe = False,
     entry_points = {
         "console_scripts": ["mmi=mmi.cli:main"],
     },
     python_requires = ">=3.7",
+    data_files = [
+        ('data', ['data/mmi.bloom'])
+    ]
 )
