@@ -6,7 +6,13 @@
 pip install matchmeta
 ```
 
+### Command
 
+```
+mmi
+```
+
+![MMI Output](MMI.jpg)
 
 ### Color Coded
 
