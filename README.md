@@ -6,33 +6,16 @@
 pip install matchmeta
 ```
 
-### Empty File
 
 
+### Color Coded
 
-### Known File
-
-
-
-### Known Meta
-
-
-
-### Large File
-
-
-
-### Partial Directory
-
-
-
-### Partial Filename
-
-
-
-### Partial Directory and Filename
-
-
+- :purple_square: Empty File (purple)
+- :green_square: Known File (green)
+- :blue_square: Known Meta (blue)
+- :red_square: Large File (red)
+- :white_large_square: Partial Meta (grey)
+- :black_large_square: Unknown (black)
 
 ### Local Development
 
