@@ -8,6 +8,7 @@ from mmi import __knownmeta__
 from mmi import __largefile__
 from mmi import __location__
 from mmi import __partialmeta__
+from mmi import __version__
 
 BLOCKSIZE = 65536
 
@@ -72,6 +73,9 @@ async def parseonlypath(onlypath):
     return status
 
 async def start():
+    print('----------------------------')
+    print('MatchMeta.Info v'+__version__)
+    print('----------------------------')
     path = os.getcwd()
     listing = os.listdir(path)
     for list in listing:
