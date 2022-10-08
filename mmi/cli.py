@@ -2,7 +2,12 @@ import asyncio
 import hashlib
 import os
 import pybloomfilter
+from mmi import __emptyfile__
+from mmi import __knownfile__
+from mmi import __knownmeta__
+from mmi import __largefile__
 from mmi import __location__
+from mmi import __partialmeta__
 
 BLOCKSIZE = 65536
 
@@ -27,10 +32,10 @@ async def hasher(fullpath):
         sha256_file = '                                                                '
         pass
     if sha256_file == 'E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855':
-        sha256_file = "\033[94m{}\033[00m" .format('** EMPTY **                                                     ')
+        sha256_file = __emptyfile__.format('** EMPTY **                                                     ')
     status = await check(sha256_file)
     if status == 'YES':
-        sha256_file = "\033[92m{}\033[00m" .format(sha256_file)
+        sha256_file = __knownfile__.format(sha256_file)
     return sha256_file
 
 async def metahash(fullpath):
@@ -79,9 +84,9 @@ async def start():
                 size = 0
                 pass
             if size == 0:
-                sha256 = "\033[94m{}\033[00m" .format('** EMPTY **                                                     ')
+                sha256 = __emptyfile__.format('** EMPTY **                                                     ')
             elif size > 104857599:
-                sha256 = "\033[91m{}\033[00m" .format('** LARGE **                                                     ')
+                sha256 = __largefile__.format('** LARGE **                                                     ')
             else:
                 sha256 = await hasher(path+'/'+list)
         elif isDir == True:
@@ -92,18 +97,18 @@ async def start():
             normalized = await normalize(path+'/'+list)
         fullpath = await metahash(normalized)
         if fullpath == 'YES':
-            dir = "\033[96m{}\033[00m".format(path)
-            file = "\033[96m{}\033[00m".format(list)
-            slash = "\033[96m{}\033[00m".format('/')
+            dir = __knownmeta__.format(path)
+            file = __knownmeta__.format(list)
+            slash = __knownmeta__.format('/')
         elif fullpath == 'NO':
             directory = await parseonlypath(normalized)
             if directory == 'YES':
-                dir = "\033[97m{}\033[00m".format(path)
+                dir = __partialmeta__.format(path)
             else:
                 dir = path
             filename = await parsefilename(normalized)
             if filename == 'YES':
-                file = "\033[97m{}\033[00m".format(list)
+                file = __partialmeta__.format(list)
             else:
                 file = list
             slash = '/'
