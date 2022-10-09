@@ -8,7 +8,7 @@ with open("README.md", "r") as f:
 setup(
     name = "matchmeta",
     version = __version__,
-    description = "Amazon Linux Analysis for Anyone and Everyone",
+    description = "Amazon Linux Triage for Anyone and Everyone",
     long_description = long_description,
     long_description_content_type = "text/markdown",
     url = "https://github.com/jblukach/mmi",
