@@ -6,14 +6,17 @@ from mmi import __emptyfile__
 from mmi import __knownfile__
 from mmi import __knownmeta__
 from mmi import __largefile__
-from mmi import __location__
 from mmi import __partialmeta__
 from mmi import __version__
 
 BLOCKSIZE = 65536
 
 async def check(sha256):
-    mmi = pybloomfilter.BloomFilter.open(__location__)
+    try:
+        mmi = pybloomfilter.BloomFilter.open('~/.local/data/mmi.bloom')
+    except:
+        mmi = pybloomfilter.BloomFilter.open('/usr/local/data/mmi.bloom')
+        pass
     if sha256 in mmi:
         value = 'YES'
     else:
