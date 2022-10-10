@@ -1,4 +1,6 @@
-![MMI Output](MMI.jpg)
+![MatchMeta.Info CLI Output](MMI.jpg)
+
+# mmi
 
 ### Installation
 
