@@ -1,4 +1,4 @@
-# mmi
+![MMI Output](MMI.jpg)
 
 ### Installation
 
@@ -11,8 +11,6 @@ pip install matchmeta
 ```
 mmi
 ```
-
-![MMI Output](MMI.jpg)
 
 ### Color Coded
 
