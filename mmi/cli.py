@@ -73,9 +73,10 @@ async def parseonlypath(onlypath):
     return status
 
 async def start():
-    print('----------------------------')
-    print('MatchMeta.Info v'+__version__)
-    print('----------------------------')
+    print('|---------------------------------------')
+    print('| MatchMeta.Info v'+__version__+' (mmi) ')
+    print('| - pip install matchmeta --upgrade     ')
+    print('|---------------------------------------')
     path = os.getcwd()
     listing = os.listdir(path)
     for list in listing:

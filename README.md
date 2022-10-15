@@ -52,14 +52,19 @@ f.close()
 
 mmi = pybloomfilter.BloomFilter(10000000, 0.001, 'mmi.bloom')
 
+count = 0
+
 with zipfile.ZipFile(output['filename']) as z:
 	with z.open('matchmeta-unique-sha256.txt') as f:
 		for line in f:
 			value = line[:-1].decode().strip('"')
 			if value != 'sha256':
 				mmi.add(value)
+				count += 1
 	f.close()
 z.close()
 
 mmi.sync()
+
+print(count)
 ```
