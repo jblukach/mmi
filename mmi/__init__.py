@@ -19,7 +19,7 @@ __knownmeta__ = KNOWNMETA = '\033[96m{}\033[00m'        ### BLUE ###
 __largefile__ = LARGEFILE = '\033[91m{}\033[00m'        ### RED ###
 __partialmeta__ = PARTIALMETA = '\033[97m{}\033[00m'    ### GREY ###
 __sha256__ = SHA256 = '6279036E7E2AD18521905FA15A7AB5882FD2BB92861B00226ED17F47FF08E4A8'
-__version__ = VERSION = '4.0'
+__version__ = VERSION = '4.1'
 
 sha256_hasher = hashlib.sha256()
 with open(__location__,'rb') as f:
