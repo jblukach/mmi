@@ -1,8 +1,9 @@
 import asyncio
 import hashlib
-import os
+import pathlib
 import pybloomfilter
 from mmi import __emptyfile__
+from mmi import __gtfo__
 from mmi import __knownfile__
 from mmi import __knownmeta__
 from mmi import __largefile__
@@ -11,7 +12,9 @@ from mmi import __partialmeta__
 from mmi import __version__
 
 BLOCKSIZE = 65536
-mmi = pybloomfilter.BloomFilter.open(__location__)
+
+mmi = pybloomfilter.BloomFilter.open(str(__location__))
+gtfo = pybloomfilter.BloomFilter.open(str(__gtfo__))
 
 async def check(sha256):
     if sha256 in mmi:
@@ -77,14 +80,12 @@ async def start():
     print('| MatchMeta.Info v'+__version__+' (mmi) ')
     print('| - pip install matchmeta --upgrade     ')
     print('|---------------------------------------')
-    path = os.getcwd()
-    listing = os.listdir(path)
-    for list in listing:
-        isFile = os.path.isfile(path+'/'+list)
-        isDir = os.path.isdir(path+'/'+list)
+    for p in pathlib.Path.cwd().iterdir():
+        isFile = p.is_file()
+        isDir = p.is_dir()
         if isFile == True:
             try:
-                size = os.path.getsize(path+'/'+list)
+                size = pathlib.Path(p).stat().st_size
             except: 
                 size = 0
                 pass
@@ -93,36 +94,33 @@ async def start():
             elif size > 104857599:
                 sha256 = __largefile__.format('** LARGE **                                                     ')
             else:
-                sha256 = await hasher(path+'/'+list)
+                sha256 = await hasher(p)
         elif isDir == True:
             sha256 = ' -- DIR --                                                      '
-        if path == '/':
-            normalized = await normalize(path+list)
-        else:
-            normalized = await normalize(path+'/'+list)
+        normalized = await normalize(str(p))
         fullpath = await metahash(normalized)
         if fullpath == 'YES':
-            dir = __knownmeta__.format(path)
-            file = __knownmeta__.format(list)
+            dir = __knownmeta__.format(str(p.parent))
+            file = __knownmeta__.format(str(p.name))
             slash = __knownmeta__.format('/')
         elif fullpath == 'NO':
             directory = await parseonlypath(normalized)
             if directory == 'YES':
-                dir = __partialmeta__.format(path)
+                dir = __partialmeta__.format(str(p.parent))
             else:
-                dir = path
+                dir = str(p.parent)
             filename = await parsefilename(normalized)
             if filename == 'YES':
-                file = __partialmeta__.format(list)
+                file = __partialmeta__.format(str(p.name))
             else:
-                file = list
+                file = str(p.name)
             slash = '/'
         else:
-            dir = path
-            file = list
+            dir = str(p.parent)
+            file = str(p.name)
             slash = '/'
 
-        if path == '/':
+        if str(p.parent) == '/':
             print(sha256+' '+dir+file)
         else:
             print(sha256+' '+dir+slash+file)
