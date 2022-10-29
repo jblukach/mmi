@@ -25,9 +25,9 @@ mmi
 
 ### GTFOBins
 
-- H (red) Known SHA256 Hash
-- P (red) Known Full Path
-- F (red) Known File Name
+- H for Known SHA256 Hash :red_square: (red)
+- P for Known Full Path :red_square: (red)
+- F for Known File Name :red_square: (red)
 
 https://gtfobins.github.io
 
