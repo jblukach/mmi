@@ -23,6 +23,14 @@ mmi
 - :white_large_square: Partial Meta (grey)
 - :black_large_square: Unknown (black)
 
+### GTFOBins
+
+- H (red) Known SHA256 Hash
+- P (red) Known Full Path
+- F (red) Known File Name
+
+https://gtfobins.github.io
+
 ### Local Development
 
 ```
