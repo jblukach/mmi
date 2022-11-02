@@ -118,7 +118,6 @@ async def start():
         fullpath = await metahash(normalized)
         if fullpath['gtfo'] == 'YES':
             gtfo_path = __largefile__.format('P')
-            gtfo_file = __largefile__.format('F')
         if fullpath['meta'] == 'YES':
             dir = __knownmeta__.format(str(p.parent))
             file = __knownmeta__.format(str(p.name))
@@ -130,7 +129,7 @@ async def start():
             else:
                 dir = str(p.parent)
             filename = await parsefilename(normalized)
-            if filename['gtfo'] == 'YES':
+            if filename['gtfo'] == 'YES' and isFile == True:
                 gtfo_file = __largefile__.format('F')
             if filename['meta'] == 'YES':
                 file = __partialmeta__.format(str(p.name))
