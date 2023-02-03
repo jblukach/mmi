@@ -13,7 +13,7 @@ setup(
     long_description_content_type = "text/markdown",
     url = "https://github.com/jblukach/mmi",
     author = "John Lukach",
-    author_email = "help@lukach.io",
+    author_email = "hello@lukach.io",
     license = "Apache-2.0",
     packages = ["mmi"],
     install_requires = [
