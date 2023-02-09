@@ -65,20 +65,29 @@ if d.status_code == 200:
 f.close()
 
 mmi = pybloomfilter.BloomFilter(10000000, 0.001, 'mmi.bloom')
+common = pybloomfilter.BloomFilter(5000000, 0.001, 'common.bloom')
 
 count = 0
+number = 0
 
 with zipfile.ZipFile(output['filename']) as z:
 	with z.open('matchmeta-unique-sha256.txt') as f:
 		for line in f:
 			value = line[:-1].decode().strip('"')
-			if value != 'sha256':
-				mmi.add(value)
+			parse = value.split('","')
+			if parse[0] != 'sha256':
+				mmi.add(parse[0])
 				count += 1
+				if int(parse[1]) >= 5:
+					common.add(parse[0])
+					number += 1
+
 	f.close()
 z.close()
 
 mmi.sync()
+common.sync()
 
 print(count)
+print(number)
 ```
