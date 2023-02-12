@@ -29,7 +29,8 @@ setup(
         (
             'data', [
                 'data/mmi.bloom',
-                'data/gtfo.bloom'
+                'data/gtfo.bloom',
+                'data/common.bloom'
             ]
         )
     ]
