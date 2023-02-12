@@ -37,6 +37,12 @@ mmi
 
 https://gtfobins.github.io
 
+### Likelihood >= 5
+
+- H for Known SHA256 Hash :blue_square: (blue)
+- P for Known Full Path :blue_square: (blue)
+- F for Known File Name :blue_square: (blue)
+
 ### Local Development
 
 ```

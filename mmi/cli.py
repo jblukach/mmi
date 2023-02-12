@@ -2,6 +2,7 @@ import asyncio
 import hashlib
 import pathlib
 import pybloomfilter
+from mmi import __common__
 from mmi import __emptyfile__
 from mmi import __gtfo__
 from mmi import __knownfile__
@@ -13,6 +14,7 @@ from mmi import __version__
 
 BLOCKSIZE = 65536
 
+common = pybloomfilter.BloomFilter.open(str(__common__))
 mmi = pybloomfilter.BloomFilter.open(str(__location__))
 gtfo = pybloomfilter.BloomFilter.open(str(__gtfo__))
 
@@ -26,6 +28,10 @@ async def check(sha256):
         value['gtfo'] = 'YES'
     else:
         value['gtfo'] = 'NO'
+    if sha256 in common:          ### COMMON ###
+        value['common'] = 'YES'
+    else:
+        value['common'] = 'NO'
     return value
 
 async def hasher(fullpath):
@@ -49,9 +55,14 @@ async def hasher(fullpath):
         gtfo_hash = __largefile__.format('H')
     else:
         gtfo_hash = ' '
+    if status['common'] == 'YES':
+        common_hash = __knownmeta__.format('H')
+    else:
+        common_hash = ' '
     value = {}
     value['sha256'] = sha256_file
     value['gtfo'] = gtfo_hash
+    value['common'] = common_hash
     return value
 
 async def metahash(fullpath):
@@ -96,6 +107,9 @@ async def start():
         gtfo_file = ' '
         gtfo_hash = ' '
         gtfo_path = ' '
+        common_file = ' '
+        common_hash = ' '
+        common_path = ' '
         isFile = p.is_file()
         isDir = p.is_dir()
         if isFile == True:
@@ -111,6 +125,7 @@ async def start():
             else:
                 value = await hasher(p)
                 gtfo_hash = value['gtfo']
+                common_hash = value['common']
                 sha256 = value['sha256']
         elif isDir == True:
             sha256 = ' -- DIR --                                                      '
@@ -118,6 +133,8 @@ async def start():
         fullpath = await metahash(normalized)
         if fullpath['gtfo'] == 'YES':
             gtfo_path = __largefile__.format('P')
+        if fullpath['common'] == 'YES':
+            common_path = __knownmeta__.format('P')
         if fullpath['meta'] == 'YES':
             dir = __knownmeta__.format(str(p.parent))
             file = __knownmeta__.format(str(p.name))
@@ -131,6 +148,8 @@ async def start():
             filename = await parsefilename(normalized)
             if filename['gtfo'] == 'YES' and isFile == True:
                 gtfo_file = __largefile__.format('F')
+            if filename['common'] == 'YES' and isFile == True:
+                common_file = __knownmeta__.format('F')
             if filename['meta'] == 'YES':
                 file = __partialmeta__.format(str(p.name))
             else:
@@ -142,9 +161,9 @@ async def start():
             slash = '/'
 
         if str(p.parent) == '/':
-            print(gtfo_hash+gtfo_path+gtfo_file+' '+sha256+' '+dir+file)
+            print(gtfo_hash+gtfo_path+gtfo_file+' '+common_hash+common_path+common_file+' '+sha256+' '+dir+file)
         else:
-            print(gtfo_hash+gtfo_path+gtfo_file+' '+sha256+' '+dir+slash+file)
+            print(gtfo_hash+gtfo_path+gtfo_file+' '+common_hash+common_path+common_file+' '+sha256+' '+dir+slash+file)
 
 def main():
     asyncio.run(start())
