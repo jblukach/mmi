@@ -1,10 +1,10 @@
 # mmi
 
-Amazon Linux default installation now starts with about **150k** directories and files. How do we know which files belong on a particular host during the tirage of the operating system?
+Amazon Linux default installation now starts with about **150k** directories and files. How do we know which files belong on a particular host during the triage of the operating system?
 
 Review enough systems; you start remembering all those Amazon Linux operating system artifacts. Just in time for new directories and filenames to be added to the mix or moved to other locations.
 
-The ```mmi``` command line tool lists the current path’s directories files based on user access permission, which are color-coded to help reduce triage time.
+The ```mmi``` command line tool lists the current path’s directories and files based on user access permission, which are color-coded to help reduce triage time.
 
 ![MatchMeta.Info CLI Output](MMI.png)
 
