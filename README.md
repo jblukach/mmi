@@ -1,12 +1,12 @@
 # mmi
 
-Amazon Linux default installation now starts with about **150k** directories and files. How do we know which files belong on a particular host during the triage of the operating system?
+Amazon Linux default installation now starts with about 175k+ directories and files. How do we know which files belong on a particular host during the triage of the operating system?
 
-Review enough systems; you start remembering all those Amazon Linux operating system artifacts. Just in time for new directories and filenames to be added to the mix or moved to other locations.
+Review enough systems; you start remembering all those Amazon Linux operating system artifacts, just in time for new directories and filenames to end up in the mix or moved to other locations.
 
-The ```mmi``` command line tool lists the current path’s directories and files based on user access permission, which are color-coded to help reduce triage time.
+The ```mmi``` command line tool lists the current path’s directories and files based on the user access, which are color-coded to help reduce triage time.
 
-![MatchMeta.Info CLI Output](MMI.png)
+![MatchMeta.Info CLI Output](MMI.jpg)
 
 ### Installation
 
@@ -28,6 +28,7 @@ mmi
 - :red_square: Large File (red)
 - :white_large_square: Partial Meta (grey)
 - :black_large_square: Unknown (black)
+- :yellow_square: Not Available (yellow)
 
 ### GTFOBins
 
@@ -37,63 +38,13 @@ mmi
 
 https://gtfobins.github.io
 
-### Likelihood >= 5
+### Access Denied
 
-- H for Known SHA256 Hash :blue_square: (blue)
-- P for Known Full Path :blue_square: (blue)
-- F for Known File Name :blue_square: (blue)
+- *** for Access Denied :red_square: (red)
 
 ### Local Development
 
 ```
 pip install pybloomfiltermmap3
 python setup.py install --user
-```
-
-### Build Bloom Filter
-
-```python
-import pybloomfilter
-import requests
-import zipfile
-
-headers = {'x-api-key': '<key>'}
-
-r = requests.get('https://sha256.lukach.io/unique', headers = headers)
-
-output = r.json()
-
-d = requests.get(output['link'])
-
-if d.status_code == 200:
-    with open(output['filename'], 'wb') as f:
-        f.write(d.content)
-f.close()
-
-mmi = pybloomfilter.BloomFilter(10000000, 0.001, 'mmi.bloom')
-common = pybloomfilter.BloomFilter(5000000, 0.001, 'common.bloom')
-
-count = 0
-number = 0
-
-with zipfile.ZipFile(output['filename']) as z:
-	with z.open('matchmeta-unique-sha256.txt') as f:
-		for line in f:
-			value = line[:-1].decode().strip('"')
-			parse = value.split('","')
-			if parse[0] != 'sha256':
-				mmi.add(parse[0])
-				count += 1
-				if int(parse[1]) >= 5:
-					common.add(parse[0])
-					number += 1
-
-	f.close()
-z.close()
-
-mmi.sync()
-common.sync()
-
-print(count)
-print(number)
 ```

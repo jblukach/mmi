@@ -2,20 +2,19 @@ import asyncio
 import hashlib
 import pathlib
 import pybloomfilter
-from mmi import __common__
 from mmi import __emptyfile__
 from mmi import __gtfo__
 from mmi import __knownfile__
 from mmi import __knownmeta__
 from mmi import __largefile__
-from mmi import __location__
+from mmi import __mmi__
+from mmi import __nofilehash__
 from mmi import __partialmeta__
 from mmi import __version__
 
 BLOCKSIZE = 65536
 
-common = pybloomfilter.BloomFilter.open(str(__common__))
-mmi = pybloomfilter.BloomFilter.open(str(__location__))
+mmi = pybloomfilter.BloomFilter.open(str(__mmi__))
 gtfo = pybloomfilter.BloomFilter.open(str(__gtfo__))
 
 async def check(sha256):
@@ -28,10 +27,6 @@ async def check(sha256):
         value['gtfo'] = 'YES'
     else:
         value['gtfo'] = 'NO'
-    if sha256 in common:          ### COMMON ###
-        value['common'] = 'YES'
-    else:
-        value['common'] = 'NO'
     return value
 
 async def hasher(fullpath):
@@ -44,7 +39,7 @@ async def hasher(fullpath):
                 buf = afile.read(BLOCKSIZE)
         sha256_file = sha256_hasher.hexdigest().upper()
     except:
-        sha256_file = '                                                                '
+        sha256_file = __nofilehash__.format('** N/A **                                                       ')
         pass
     if sha256_file == 'E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855':
         sha256_file = __emptyfile__.format('** EMPTY **                                                     ')
@@ -55,14 +50,9 @@ async def hasher(fullpath):
         gtfo_hash = __largefile__.format('H')
     else:
         gtfo_hash = ' '
-    if status['common'] == 'YES':
-        common_hash = __knownmeta__.format('H')
-    else:
-        common_hash = ' '
     value = {}
     value['sha256'] = sha256_file
     value['gtfo'] = gtfo_hash
-    value['common'] = common_hash
     return value
 
 async def metahash(fullpath):
@@ -101,69 +91,74 @@ async def parseonlypath(onlypath):
 async def start():
     print('|---------------------------------------')
     print('| MatchMeta.Info v'+__version__+' (mmi) ')
-    print('| - pip install matchmeta --upgrade     ')
     print('|---------------------------------------')
     for p in pathlib.Path.cwd().iterdir():
-        gtfo_file = ' '
-        gtfo_hash = ' '
-        gtfo_path = ' '
-        common_file = ' '
-        common_hash = ' '
-        common_path = ' '
-        isFile = p.is_file()
-        isDir = p.is_dir()
-        if isFile == True:
-            try:
-                size = pathlib.Path(p).stat().st_size
-            except: 
-                size = 0
-                pass
-            if size == 0:
-                sha256 = __emptyfile__.format('** EMPTY **                                                     ')
-            elif size > 104857599:
-                sha256 = __largefile__.format('** LARGE **                                                     ')
-            else:
-                value = await hasher(p)
-                gtfo_hash = value['gtfo']
-                common_hash = value['common']
-                sha256 = value['sha256']
-        elif isDir == True:
-            sha256 = ' -- DIR --                                                      '
-        normalized = await normalize(str(p))
-        fullpath = await metahash(normalized)
-        if fullpath['gtfo'] == 'YES':
-            gtfo_path = __largefile__.format('P')
-        if fullpath['common'] == 'YES':
-            common_path = __knownmeta__.format('P')
-        if fullpath['meta'] == 'YES':
-            dir = __knownmeta__.format(str(p.parent))
-            file = __knownmeta__.format(str(p.name))
-            slash = __knownmeta__.format('/')
-        elif fullpath['meta'] == 'NO':
-            directory = await parseonlypath(normalized)
-            if directory['meta'] == 'YES':
-                dir = __partialmeta__.format(str(p.parent))
+        try:
+            gtfo_file = ' '
+            gtfo_hash = ' '
+            gtfo_path = ' '
+            isFile = p.is_file()
+            isDir = p.is_dir()
+            if isFile == True:
+                try:
+                    size = pathlib.Path(p).stat().st_size
+                except: 
+                    size = 0
+                    pass
+                if size == 0:
+                    sha256 = __emptyfile__.format('** EMPTY **                                                     ')
+                elif size > 104857599:
+                    sha256 = __largefile__.format('** LARGE **                                                     ')
+                else:
+                    value = await hasher(p)
+                    gtfo_hash = value['gtfo']
+                    sha256 = value['sha256']
+            elif isDir == True:
+                sha256 = ' -- DIR --                                                      '
+            normalized = await normalize(str(p))
+            fullpath = await metahash(normalized)
+            if fullpath['gtfo'] == 'YES':
+                gtfo_path = __largefile__.format('P')
+            if fullpath['meta'] == 'YES':
+                dir = __knownmeta__.format(str(p.parent))
+                file = __knownmeta__.format(str(p.name))
+                slash = __knownmeta__.format('/')
+            elif fullpath['meta'] == 'NO':
+                directory = await parseonlypath(normalized)
+                if directory['meta'] == 'YES':
+                    dir = __partialmeta__.format(str(p.parent))
+                else:
+                    dir = str(p.parent)
+                filename = await parsefilename(normalized)
+                if filename['gtfo'] == 'YES' and isFile == True:
+                    gtfo_file = __largefile__.format('F')
+                if filename['meta'] == 'YES':
+                    file = __partialmeta__.format(str(p.name))
+                else:
+                    file = str(p.name)
+                slash = '/'
             else:
                 dir = str(p.parent)
-            filename = await parsefilename(normalized)
-            if filename['gtfo'] == 'YES' and isFile == True:
-                gtfo_file = __largefile__.format('F')
-            if filename['common'] == 'YES' and isFile == True:
-                common_file = __knownmeta__.format('F')
-            if filename['meta'] == 'YES':
-                file = __partialmeta__.format(str(p.name))
-            else:
                 file = str(p.name)
-            slash = '/'
-        else:
-            dir = str(p.parent)
-            file = str(p.name)
-            slash = '/'
+                slash = '/'
 
-        if str(p.parent) == '/':
-            print(gtfo_hash+gtfo_path+gtfo_file+' '+common_hash+common_path+common_file+' '+sha256+' '+dir+file)
-        else:
-            print(gtfo_hash+gtfo_path+gtfo_file+' '+common_hash+common_path+common_file+' '+sha256+' '+dir+slash+file)
+            if str(p.parent) == '/':
+                print(gtfo_hash+gtfo_path+gtfo_file+' '+sha256+' '+dir+file)
+            else:
+                print(gtfo_hash+gtfo_path+gtfo_file+' '+sha256+' '+dir+slash+file)
+
+        except PermissionError:
+
+            denied = __largefile__.format('***')
+            sha256 = __largefile__.format('** N/A **                                                       ')
+            dir = __largefile__.format(str(p.parent))
+            file = __largefile__.format(str(p.name))
+            slash = __largefile__.format('/')
+
+            if str(p.parent) == '/':
+                print(denied+' '+sha256+' '+dir+file)
+            else:
+                print(denied+' '+sha256+' '+dir+slash+file)
 
 def main():
     asyncio.run(start())

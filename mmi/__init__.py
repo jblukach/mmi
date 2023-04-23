@@ -1,83 +1,91 @@
+import datetime
 import hashlib
 import pathlib
 import sys
+import requests
 
-BLOCKSIZE = 65536
+now = int(datetime.datetime.now().timestamp())
+update = pathlib.Path('/tmp/mmi.lastupdate')
 
-local = pathlib.Path.joinpath(pathlib.Path(__file__).resolve().parents[1],'data/mmi.bloom')
-localgtfo = pathlib.Path.joinpath(pathlib.Path(__file__).resolve().parents[1],'data/gtfo.bloom')
-localcommon = pathlib.Path.joinpath(pathlib.Path(__file__).resolve().parents[1],'data/common.bloom')
-user = pathlib.Path.joinpath(pathlib.Path.home(),'.local/data/mmi.bloom')
-usergtfo = pathlib.Path.joinpath(pathlib.Path.home(),'.local/data/gtfo.bloom')
-usercommon = pathlib.Path.joinpath(pathlib.Path.home(),'.local/data/common.bloom')
-system = pathlib.Path('/usr/local/data/mmi.bloom')
-systemgtfo = pathlib.Path('/usr/local/data/gtfo.bloom')
-systemcommon = pathlib.Path('/usr/local/data/common.bloom')
+def calculate(item):
+    BLOCKSIZE = 65536
+    sha256_hasher = hashlib.sha256()
+    with open('/tmp/'+item+'.bloom', 'rb') as f:
+        buf = f.read(BLOCKSIZE)
+        while len(buf) > 0:
+            sha256_hasher.update(buf)
+            buf = f.read(BLOCKSIZE)
+    f.close()
+    sha256 = sha256_hasher.hexdigest().upper()
+    return sha256
 
-if user.is_file() == True:
-    __location__ = LOCATION = user
-    __gtfo__ = GTFO = usergtfo
-    __common__ = COMMON = usercommon
-elif system.is_file() == True:
-    __location__ = LOCATION = system
-    __gtfo__ = GTFO = systemgtfo
-    __common__ = COMMON = systemcommon
-else:
-    __location__ = LOCATION = local
-    __gtfo__ = GTFO = localgtfo
-    __common__ = COMMON = localcommon
+def download(item):
+    r = requests.get('https://static.matchmeta.info/'+item+'.bloom')
+    if r.status_code == 200:
+        with open('/tmp/'+item+'.bloom', 'wb') as f:
+            f.write(r.content)
+    else:
+        print('FAILED: https://static.matchmeta.info/'+item+'.bloom')
+        sys.exit(1)
+
+def verify(item):
+    r = requests.get('https://static.matchmeta.info/'+item+'.sha256')
+    if r.status_code == 200:
+        return r.text
+    else:
+        print('FAILED: https://static.matchmeta.info/'+item+'.sha256')
+        sys.exit(1)
+
+__version__ = VERSION = '2023.4.1'
 
 __emptyfile__ = EMPTYFILE = '\033[94m{}\033[00m'        ### PURPLE ###
 __knownfile__ = KNOWNFILE = '\033[92m{}\033[00m'        ### GREEN ###
 __knownmeta__ = KNOWNMETA = '\033[96m{}\033[00m'        ### BLUE ###
 __largefile__ = LARGEFILE = '\033[91m{}\033[00m'        ### RED ###
+__nofilehash__ = NOFILEHASH = '\033[93m{}\033[00m'      ### YELLOW ###
 __partialmeta__ = PARTIALMETA = '\033[97m{}\033[00m'    ### GREY ###
-__sha256__ = SHA256 = 'F0B5C366824E8D54954B0B8429C1E95CD5A41A9EB6A3DADB89C501D85A93D76E'
-__sha256gtfo__ = SHA256GTFO = '8EC45F6C55984B66BE709611C689F0C63E2E44B68F55891BF7F300BAE4A56080'
-__sha256common__ = SHA256COMMON = 'B2424267BB9C62A7850828955BDF6EE98C520BBAE195F495BA1862F8A0DE0C48'
-__version__ = VERSION = '16.2'
 
-sha256_hasher = hashlib.sha256()    ### MMI ###
+__gtfo__ = GTFO = pathlib.Path('/tmp/gtfo.bloom')
+__mmi__ = MMI = pathlib.Path('/tmp/mmi.bloom')
 
-with open(__location__,'rb') as f:
-    buf = f.read(BLOCKSIZE)
-    while len(buf) > 0:
-        sha256_hasher.update(buf)
-        buf = f.read(BLOCKSIZE)
-f.close()
+if __gtfo__.is_file() == False:
+    pathlib.Path(update).write_text(str(now + 3600))
+    download('gtfo')
+    sha256 = verify('gtfo')
+    check = calculate('gtfo')
+    if check != sha256:
+        print('CORRUPTED: /tmp/gtfo.bloom')
+        sys.exit(1)
+else:
+    checked = int(pathlib.Path(update).read_text())
+    if now > checked:
+        sha256 = verify('gtfo')
+        check = calculate('gtfo')
+        if check != sha256:
+            download('gtfo')
+            check = calculate('gtfo')
+            if check != sha256:
+                print('CORRUPTED: /tmp/gtfo.bloom')
+                sys.exit(1)
+        pathlib.Path(update).write_text(str(now + 3600))
 
-sha256_file = sha256_hasher.hexdigest().upper()
-
-if sha256_file != __sha256__:
-    print("MMI bloom filter is corrupted.")
-    sys.exit(1)
-
-sha256_hasher = hashlib.sha256()    ### GTFO ###
-
-with open(__gtfo__,'rb') as f:
-    buf = f.read(BLOCKSIZE)
-    while len(buf) > 0:
-        sha256_hasher.update(buf)
-        buf = f.read(BLOCKSIZE)
-f.close()
-
-sha256_file = sha256_hasher.hexdigest().upper()
-
-if sha256_file != __sha256gtfo__:
-    print("GTFO bloom filter is corrupted.")
-    sys.exit(1)
-
-sha256_hasher = hashlib.sha256()    ### COMMON ###
-
-with open(__common__,'rb') as f:
-    buf = f.read(BLOCKSIZE)
-    while len(buf) > 0:
-        sha256_hasher.update(buf)
-        buf = f.read(BLOCKSIZE)
-f.close()
-
-sha256_file = sha256_hasher.hexdigest().upper()
-
-if sha256_file != __sha256common__:
-    print("COMMON bloom filter is corrupted.")
-    sys.exit(1)
+if __mmi__.is_file() == False:
+    pathlib.Path(update).write_text(str(now + 3600))
+    download('mmi')
+    sha256 = verify('mmi')
+    check = calculate('mmi')
+    if check != sha256:
+        print('CORRUPTED: /tmp/mmi.bloom')
+        sys.exit(1)
+else:
+    checked = int(pathlib.Path(update).read_text())
+    if now > checked:
+        sha256 = verify('gtfo')
+        check = calculate('gtfo')
+        if check != sha256:
+            download('mmi')
+            check = calculate('mmi')
+            if check != sha256:
+                print('CORRUPTED: /tmp/mmi.bloom')
+                sys.exit(1)
+        pathlib.Path(update).write_text(str(now + 3600))
