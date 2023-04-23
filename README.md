@@ -1,6 +1,6 @@
 # mmi
 
-Amazon Linux default installation now starts with about 175k+ directories and files. How do we know which files belong on a particular host during the triage of the operating system?
+Amazon Linux default installation now starts with about ```175k+``` directories and files. How do we know which files belong on a particular host during the triage of the operating system?
 
 Review enough systems; you start remembering all those Amazon Linux operating system artifacts, just in time for new directories and filenames to end up in the mix or moved to other locations.
 
