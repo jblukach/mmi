@@ -6,7 +6,7 @@ Review enough systems; you start remembering all those Amazon Linux operating sy
 
 The ```mmi``` command line tool lists the current path’s directories and files based on the user access, which are color-coded to help reduce triage time.
 
-![MatchMeta.Info CLI Output](MMI.jpg)
+![MatchMeta.Info CLI Output](MMI.png)
 
 ### Installation
 

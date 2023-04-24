@@ -32,14 +32,12 @@ async def calculate(item):
     sha256 = sha256_hasher.hexdigest().upper()
     return sha256
 
-async def check(sha256):
+async def check(sha256, mmi, gtfo):
     value = {}
-    mmi = pybloomfilter.BloomFilter.open(str(__mmi__))      ### MMI ###
     if sha256 in mmi:
         value['meta'] = 'YES'
     else:
         value['meta'] = 'NO'
-    gtfo = pybloomfilter.BloomFilter.open(str(__gtfo__))    ### GTFO ###
     if sha256 in gtfo:
         value['gtfo'] = 'YES'
     else:
@@ -55,7 +53,7 @@ async def download(item):
         print('FAILED: https://static.matchmeta.info/'+item+'.bloom')
         sys.exit(1)
 
-async def hasher(fullpath):
+async def hasher(fullpath, mmi, gtfo):
     try:
         sha256_hasher = hashlib.sha256()
         with open(fullpath,'rb') as afile:
@@ -69,7 +67,7 @@ async def hasher(fullpath):
         pass
     if sha256_file == 'E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855':
         sha256_file = __emptyfile__.format('** EMPTY **                                                     ')
-    status = await check(sha256_file)
+    status = await check(sha256_file, mmi, gtfo)
     if status['meta'] == 'YES':
         sha256_file = __knownfile__.format(sha256_file)
     if status['gtfo'] == 'YES':
@@ -81,11 +79,11 @@ async def hasher(fullpath):
     value['gtfo'] = gtfo_hash
     return value
 
-async def metahash(fullpath):
+async def metahash(fullpath, mmi, gtfo):
     sha256_meta = hashlib.sha256()
     sha256_meta.update(fullpath.encode())
     sha256_hash = sha256_meta.hexdigest().upper()
-    status = await check(sha256_hash)
+    status = await check(sha256_hash, mmi, gtfo)
     return status
 
 async def normalize(path):
@@ -99,19 +97,19 @@ async def normalize(path):
             pass
     return path
 
-async def parsefilename(filename):
+async def parsefilename(filename, mmi, gtfo):
     if filename[:1] == '/':
         out = filename.split('/')
         count = len(out) - 1
-        status = await metahash(out[count])
+        status = await metahash(out[count], mmi, gtfo)
     return status
 
-async def parseonlypath(onlypath):
+async def parseonlypath(onlypath, mmi, gtfo):
     if onlypath[:1] == '/':
         out = onlypath.split('/')
         del out[-1]
         onlypath = '/'.join(out)
-        status = await metahash(onlypath)
+        status = await metahash(onlypath, mmi, gtfo)
     return status
 
 async def verify(item):
@@ -166,6 +164,9 @@ async def start():
                     sys.exit(1)
             pathlib.Path(update).write_text(str(now + 3600))
 
+    mmi = pybloomfilter.BloomFilter.open(str(__mmi__))      ### MMI ###
+    gtfo = pybloomfilter.BloomFilter.open(str(__gtfo__))    ### GTFO ###
+
     print('|---------------------------------------')
     print('| MatchMeta.Info v'+__version__+' (mmi) ')
     print('|---------------------------------------')
@@ -188,13 +189,13 @@ async def start():
                 elif size > 104857599:
                     sha256 = __largefile__.format('** LARGE **                                                     ')
                 else:
-                    value = await hasher(p)
+                    value = await hasher(p, mmi, gtfo)
                     gtfo_hash = value['gtfo']
                     sha256 = value['sha256']
             elif isDir == True:
                 sha256 = ' -- DIR --                                                      '
             normalized = await normalize(str(p))
-            fullpath = await metahash(normalized)
+            fullpath = await metahash(normalized, mmi, gtfo)
             if fullpath['gtfo'] == 'YES':
                 gtfo_path = __largefile__.format('P')
             if fullpath['meta'] == 'YES':
@@ -202,12 +203,12 @@ async def start():
                 file = __knownmeta__.format(str(p.name))
                 slash = __knownmeta__.format('/')
             elif fullpath['meta'] == 'NO':
-                directory = await parseonlypath(normalized)
+                directory = await parseonlypath(normalized, mmi, gtfo)
                 if directory['meta'] == 'YES':
                     dir = __partialmeta__.format(str(p.parent))
                 else:
                     dir = str(p.parent)
-                filename = await parsefilename(normalized)
+                filename = await parsefilename(normalized, mmi, gtfo)
                 if filename['gtfo'] == 'YES' and isFile == True:
                     gtfo_file = __largefile__.format('F')
                 if filename['meta'] == 'YES':
@@ -228,7 +229,7 @@ async def start():
         except PermissionError:
 
             denied = __largefile__.format('***')
-            sha256 = __largefile__.format('** N/A **                                                       ')
+            sha256 = __nofilehash__.format('** N/A **                                                       ')
             dir = __largefile__.format(str(p.parent))
             file = __largefile__.format(str(p.name))
             slash = __largefile__.format('/')
