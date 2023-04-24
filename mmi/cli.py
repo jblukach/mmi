@@ -1,7 +1,10 @@
 import asyncio
+import datetime
 import hashlib
 import pathlib
 import pybloomfilter
+import sys
+import requests
 from mmi import __emptyfile__
 from mmi import __gtfo__
 from mmi import __knownfile__
@@ -14,20 +17,43 @@ from mmi import __version__
 
 BLOCKSIZE = 65536
 
-mmi = pybloomfilter.BloomFilter.open(str(__mmi__))
-gtfo = pybloomfilter.BloomFilter.open(str(__gtfo__))
+now = int(datetime.datetime.now().timestamp())
+update = pathlib.Path('/tmp/mmi.lastupdate')
+
+async def calculate(item):
+    BLOCKSIZE = 65536
+    sha256_hasher = hashlib.sha256()
+    with open('/tmp/'+item+'.bloom', 'rb') as f:
+        buf = f.read(BLOCKSIZE)
+        while len(buf) > 0:
+            sha256_hasher.update(buf)
+            buf = f.read(BLOCKSIZE)
+    f.close()
+    sha256 = sha256_hasher.hexdigest().upper()
+    return sha256
 
 async def check(sha256):
     value = {}
-    if sha256 in mmi:           ### MMI ###
+    mmi = pybloomfilter.BloomFilter.open(str(__mmi__))      ### MMI ###
+    if sha256 in mmi:
         value['meta'] = 'YES'
     else:
         value['meta'] = 'NO'
-    if sha256 in gtfo:          ### GTFO ###
+    gtfo = pybloomfilter.BloomFilter.open(str(__gtfo__))    ### GTFO ###
+    if sha256 in gtfo:
         value['gtfo'] = 'YES'
     else:
         value['gtfo'] = 'NO'
     return value
+
+async def download(item):
+    r = requests.get('https://static.matchmeta.info/'+item+'.bloom')
+    if r.status_code == 200:
+        with open('/tmp/'+item+'.bloom', 'wb') as f:
+            f.write(r.content)
+    else:
+        print('FAILED: https://static.matchmeta.info/'+item+'.bloom')
+        sys.exit(1)
 
 async def hasher(fullpath):
     try:
@@ -88,10 +114,62 @@ async def parseonlypath(onlypath):
         status = await metahash(onlypath)
     return status
 
+async def verify(item):
+    r = requests.get('https://static.matchmeta.info/'+item+'.sha256')
+    if r.status_code == 200:
+        return r.text
+    else:
+        print('FAILED: https://static.matchmeta.info/'+item+'.sha256')
+        sys.exit(1)
+
 async def start():
+
+    if __gtfo__.is_file() == False:
+        pathlib.Path(update).write_text(str(now + 3600))
+        await download('gtfo')
+        sha256 = await verify('gtfo')
+        check = await calculate('gtfo')
+        if check != sha256:
+            print('CORRUPTED: /tmp/gtfo.bloom')
+            sys.exit(1)
+    else:
+        checked = int(pathlib.Path(update).read_text())
+        if now > checked:
+            sha256 = await verify('gtfo')
+            check = await calculate('gtfo')
+            if check != sha256:
+                await download('gtfo')
+                check = await calculate('gtfo')
+                if check != sha256:
+                    print('CORRUPTED: /tmp/gtfo.bloom')
+                    sys.exit(1)
+            pathlib.Path(update).write_text(str(now + 3600))
+
+    if __mmi__.is_file() == False:
+        pathlib.Path(update).write_text(str(now + 3600))
+        await download('mmi')
+        sha256 = await verify('mmi')
+        check = await calculate('mmi')
+        if check != sha256:
+            print('CORRUPTED: /tmp/mmi.bloom')
+            sys.exit(1)
+    else:
+        checked = int(pathlib.Path(update).read_text())
+        if now > checked:
+            sha256 = await verify('gtfo')
+            check = await calculate('gtfo')
+            if check != sha256:
+                await download('mmi')
+                check = await calculate('mmi')
+                if check != sha256:
+                    print('CORRUPTED: /tmp/mmi.bloom')
+                    sys.exit(1)
+            pathlib.Path(update).write_text(str(now + 3600))
+
     print('|---------------------------------------')
     print('| MatchMeta.Info v'+__version__+' (mmi) ')
     print('|---------------------------------------')
+
     for p in pathlib.Path.cwd().iterdir():
         try:
             gtfo_file = ' '
