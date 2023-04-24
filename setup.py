@@ -17,8 +17,7 @@ setup(
     license = "Apache-2.0",
     packages = ["mmi"],
     install_requires = [
-        "pybloomfiltermmap3",
-        "requests"
+        "pybloomfiltermmap3"
     ],
     entry_points = {
         "console_scripts": [
