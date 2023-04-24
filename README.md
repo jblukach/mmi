@@ -45,6 +45,6 @@ https://gtfobins.github.io
 ### Local Development
 
 ```
-pip install pybloomfiltermmap3
+pip install pybloomfiltermmap3 requests
 python setup.py install --user
 ```
