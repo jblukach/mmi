@@ -4,7 +4,7 @@ Amazon Linux default installation now starts with about ```175k+``` directories 
 
 Review enough systems; you start remembering all those Amazon Linux operating system artifacts, just in time for new directories and filenames to end up in the mix or moved to other locations.
 
-The ```mmi``` command line tool lists the current path’s directories and files based on the user access, which are color-coded to help reduce triage time.
+The ```mmi``` command line tool lists the current path’s directories and files based on user access, which are color-coded to help reduce triage time.
 
 ![MatchMeta.Info CLI Output](MMI.png)
 
