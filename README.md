@@ -26,9 +26,9 @@ mmi
 - :green_square: Known File (green)
 - :blue_square: Known Meta (blue)
 - :red_square: Large File (red)
+- :yellow_square: Not Available (yellow)
 - :white_large_square: Partial Meta (grey)
 - :black_large_square: Unknown (black)
-- :yellow_square: Not Available (yellow)
 
 ### GTFOBins
 
