@@ -154,8 +154,8 @@ async def start():
     else:
         checked = int(pathlib.Path(update).read_text())
         if now > checked:
-            sha256 = await verify('gtfo')
-            check = await calculate('gtfo')
+            sha256 = await verify('mmi')
+            check = await calculate('mmi')
             if check != sha256:
                 await download('mmi')
                 check = await calculate('mmi')
