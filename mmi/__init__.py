@@ -1,6 +1,6 @@
 import pathlib
 
-__version__ = VERSION = '2023.4.24'
+__version__ = VERSION = '2023.5.19'
 
 __emptyfile__ = EMPTYFILE = '\033[94m{}\033[00m'        ### PURPLE ###
 __knownfile__ = KNOWNFILE = '\033[92m{}\033[00m'        ### GREEN ###
