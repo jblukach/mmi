@@ -1,50 +1,109 @@
 # mmi
 
-Amazon Linux default installation now starts with about ```175k+``` directories and files. How do we know which files belong on a particular host during the triage of the operating system?
+Metadata is the lowest-value indicator as easy to circumvent. Still, with the exponential volume of directories and files standard on default operating system installations, finding things hiding in plain sight has become an important analysis technique.
 
-Review enough systems; you start remembering all those Amazon Linux operating system artifacts, just in time for new directories and filenames to end up in the mix or moved to other locations.
+```
+MMI - OS Triage for Anyone and Everyone
 
-The ```mmi``` command line tool lists the current path’s directories and files based on user access, which are color-coded to help reduce triage time.
+options:
+  -h, --help      show this help message and exit
+  -d, --download  Download Bloom Filters
+  -s, --skip      Skip File Hashing
+  -v, --version   show program's version number and exit
+  ```
 
-![MatchMeta.Info CLI Output](MMI.png)
+### DATASET
 
-### Installation
+GetBlocks generates the dataset using the SHA256 format for directories, files, hashes, and paths.
+
+https://github.com/4n6ir/getblocks
+
+A pipeline runs every hour to determine if AWS has released any new verified Amazon Machine Image (AMI) to harvest artifacts with the current coverage available.
+
+https://static.matchmeta.info/amazonami.json
+
+### DISTRIBUTION
+
+A download option in the command line interface (CLI) stores the bloom filters in the user's home directory.
+
+```
+mmi -d
+```
+
+Please use these links to download the bloom filters for offline analysis.
+
+https://static.matchmeta.info/gtfo.bloom
+
+https://static.matchmeta.info/mmi.bloom
+
+You can verify the integrity of the bloom filters by using the provided SHA256 hash values.
+
+https://static.matchmeta.info/gtfo.sha256
+
+https://static.matchmeta.info/mmi.sha256
+
+It is available for download if you're interested in the raw data using API keys available through self-registration.
+
+https://store.lukach.io/l/sha256
+
+### DETECTIONS
+
+:purple_square: Empty File (purple) 
+
+A zero byte size determines empty files or the following hash value for this detection.
+
+```E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855```
+
+:green_square: Known File (green)
+
+The SHA256 hash value for the specific file contents matches one found on an operating system in the dataset.
+
+:blue_square: Known Meta (blue)
+
+The full path matches precisely to one found on an operating system in the dataset.
+
+:red_square: Large File (red)
+
+A 100 MB or more gets marked as a large file to maintain application performance.
+
+:yellow_square: Not Available (yellow)
+
+If something goes wrong during the hashing of the file content, the program lets you know that the hash is unavailable.
+
+:white_large_square: Partial Meta (grey)
+
+If only the directory or filename matches, it indicates a familiar name from the dataset.
+
+:black_large_square: Unknown (black)
+
+Default color coding without any detections available from the dataset.
+
+### GTFOBINS
+
+GTFOBins is a curated list of Unix binaries that can bypass local security restrictions in misconfigured systems.
+
+https://gtfobins.github.io
+
+Identifying files that provide the ability to live off the land is essential.
+
+```H``` for Known SHA256 Hash :red_square: (red)
+
+```P``` for Known Full Path :red_square: (red)
+
+```F``` for Known File Name :red_square: (red)
+
+### ACCESS DENIED
+
+Three stars ```***``` :red_square: (red) indicate that you do not have access to hash the contents of a specific file.
+
+### INSTALLATION
 
 ```
 pip install matchmeta
 ```
 
-### Command Line
+### DEVELOPMENT
 
 ```
-mmi
-```
-
-### Color Coded
-
-- :purple_square: Empty File (purple)
-- :green_square: Known File (green)
-- :blue_square: Known Meta (blue)
-- :red_square: Large File (red)
-- :yellow_square: Not Available (yellow)
-- :white_large_square: Partial Meta (grey)
-- :black_large_square: Unknown (black)
-
-### GTFOBins
-
-- H for Known SHA256 Hash :red_square: (red)
-- P for Known Full Path :red_square: (red)
-- F for Known File Name :red_square: (red)
-
-https://gtfobins.github.io
-
-### Access Denied
-
-- *** for Access Denied :red_square: (red)
-
-### Local Development
-
-```
-pip install pybloomfiltermmap3 requests
 python setup.py install --user
 ```
