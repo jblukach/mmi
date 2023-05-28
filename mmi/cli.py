@@ -292,5 +292,10 @@ def main():
     if args.download:
         download()
     else:
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            executor.submit(start, args.skip)
+        if __mmi__.is_file() == False:
+            print('MISSING: '+str(__mmi__))
+        elif __gtfo__.is_file() == False:
+            print('MISSING: '+str(__gtfo__))
+        else:
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                executor.submit(start, args.skip)
