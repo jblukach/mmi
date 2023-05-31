@@ -281,16 +281,29 @@ def start(skip):
             else:
                 print(denied+' '+sha256+' '+dir+slash+file)
 
+def updated():
+
+    r = requests.get('https://static.matchmeta.info/mmi.updated')
+    if r.status_code == 200:
+        print('SUCCESS: https://static.matchmeta.info/mmi.updated')
+        print('LAST UPDATED: '+r.text)
+    else:
+        print('FAILED: https://static.matchmeta.info/mmi.updated')
+        sys.exit(1)
+
 def main():
 
     parser = argparse.ArgumentParser(description='MMI - OS Triage for Anyone and Everyone')
     parser.add_argument('-d', '--download', help='Download Bloom Filters', action='store_true')
     parser.add_argument('-s', '--skip', help='Skip File Hashing', action='store_true')
+    parser.add_argument('-u', '--updated', help='Bloom Filters Last Updated', action='store_true')
     parser.add_argument('-v', '--version', action='version', version=__version__)
     args = parser.parse_args()
 
     if args.download:
         download()
+    elif args.updated:
+        updated()
     else:
         if __mmi__.is_file() == False:
             print('MISSING: '+str(__mmi__))

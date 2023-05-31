@@ -9,6 +9,7 @@ options:
   -h, --help      show this help message and exit
   -d, --download  Download Bloom Filters
   -s, --skip      Skip File Hashing
+  -u, --updated   Bloom Filters Last Updated
   -v, --version   show program's version number and exit
   ```
 
@@ -45,6 +46,18 @@ https://static.matchmeta.info/mmi.sha256
 It is available for download if you're interested in the raw data using API keys available through self-registration.
 
 https://store.lukach.io/l/sha256
+
+### LAST UPDATED
+
+Check when the bloom filters were last updated using the command line interface (CLI).
+
+```
+mmi -u
+```
+
+Or by hitting the provided website for the last updated timestamp.
+
+https://static.matchmeta.info/mmi.updated
 
 ### DETECTIONS
 
