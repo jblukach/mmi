@@ -59,6 +59,12 @@ Or by hitting the provided website for the last updated timestamp.
 
 https://static.matchmeta.info/mmi.updated
 
+### COUNTS
+
+https://static.matchmeta.info/mmi.count
+
+https://static.matchmeta.info/gtfo.count
+
 ### DETECTIONS
 
 :purple_square: Empty File (purple) 
