@@ -10,4 +10,4 @@ __partialmeta__ = PARTIALMETA = '\033[97m{}\033[00m'    ### GREY ###
 __gtfo__ = GTFO = pathlib.Path.joinpath(pathlib.Path.home(), 'gtfo.bloom')
 __mmi__ = MMI = pathlib.Path.joinpath(pathlib.Path.home(), 'mmi.bloom')
 
-__version__ = VERSION = '2023.5.30'
+__version__ = VERSION = '2024.4.14'

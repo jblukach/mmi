@@ -95,23 +95,23 @@ def download():
 
 def gtfobloom():
 
-    r = requests.get('https://static.matchmeta.info/gtfo.bloom')
+    r = requests.get('https://dl.4n6ir.com/match-meta-info/gtfo.bloom')
     if r.status_code == 200:
         with open(__gtfo__, 'wb') as f:
-            print('SUCCESS: https://static.matchmeta.info/gtfo.bloom')
+            print('SUCCESS: https://dl.4n6ir.com/match-meta-info/gtfo.bloom')
             f.write(r.content)
     else:
-        print('FAILED: https://static.matchmeta.info/gtfo.bloom')
+        print('FAILED: https://dl.4n6ir.com/match-meta-info/gtfo.bloom')
         sys.exit(1)
 
 def gtfoverify():
 
-    r = requests.get('https://static.matchmeta.info/gtfo.sha256')
+    r = requests.get('https://dl.4n6ir.com/match-meta-info/gtfo.sha256')
     if r.status_code == 200:
-        print('SUCCESS: https://static.matchmeta.info/gtfo.sha256')
+        print('SUCCESS: https://dl.4n6ir.com/match-meta-info/gtfo.sha256')
         return r.text
     else:
-        print('FAILED: https://static.matchmeta.info/gtfo.sha256')
+        print('FAILED: https://dl.4n6ir.com/match-meta-info/gtfo.sha256')
         sys.exit(1)
 
 def hasher(fullpath, mmi, gtfo):
@@ -152,23 +152,23 @@ def metahash(fullpath, mmi, gtfo):
 
 def mmibloom():
 
-    r = requests.get('https://static.matchmeta.info/mmi.bloom')
+    r = requests.get('https://dl.4n6ir.com/match-meta-info/mmi.bloom')
     if r.status_code == 200:
         with open(__mmi__, 'wb') as f:
-            print('SUCCESS: https://static.matchmeta.info/mmi.bloom')
+            print('SUCCESS: https://dl.4n6ir.com/match-meta-info/mmi.bloom')
             f.write(r.content)
     else:
-        print('FAILED: https://static.matchmeta.info/mmi.bloom')
+        print('FAILED: https://dl.4n6ir.com/match-meta-info/mmi.bloom')
         sys.exit(1)
 
 def mmiverify():
 
-    r = requests.get('https://static.matchmeta.info/mmi.sha256')
+    r = requests.get('https://dl.4n6ir.com/match-meta-info/mmi.sha256')
     if r.status_code == 200:
-        print('SUCCESS: https://static.matchmeta.info/mmi.sha256')
+        print('SUCCESS: https://dl.4n6ir.com/match-meta-info/mmi.sha256')
         return r.text
     else:
-        print('FAILED: https://static.matchmeta.info/mmi.sha256')
+        print('FAILED: https://dl.4n6ir.com/match-meta-info/mmi.sha256')
         sys.exit(1)
 
 def normalize(path):
@@ -283,12 +283,12 @@ def start(skip):
 
 def updated():
 
-    r = requests.get('https://static.matchmeta.info/mmi.updated')
+    r = requests.get('https://dl.4n6ir.com/match-meta-info/last.updated')
     if r.status_code == 200:
-        print('SUCCESS: https://static.matchmeta.info/mmi.updated')
+        print('SUCCESS: https://dl.4n6ir.com/match-meta-info/last.updated')
         print('LAST UPDATED: '+r.text)
     else:
-        print('FAILED: https://static.matchmeta.info/mmi.updated')
+        print('FAILED: https://dl.4n6ir.com/match-meta-info/last.updated')
         sys.exit(1)
 
 def main():

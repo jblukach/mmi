@@ -19,9 +19,7 @@ GetBlocks generates the dataset using the SHA256 format for directories, files, 
 
 https://github.com/4n6ir/getblocks
 
-A pipeline runs every hour to determine if AWS has released any new verified Amazon Machine Image (AMI) to harvest artifacts with the current coverage available.
-
-https://static.matchmeta.info/amazonami.json
+A pipeline runs every hour to determine if AWS has released any new verified Amazon Machine Image (AMI) to harvest artifacts.
 
 ### DISTRIBUTION
 
@@ -33,19 +31,19 @@ mmi -d
 
 Please use these links to download the bloom filters for offline analysis.
 
-https://static.matchmeta.info/gtfo.bloom
+https://dl.4n6ir.com/match-meta-info/gtfo.bloom
 
-https://static.matchmeta.info/mmi.bloom
+https://dl.4n6ir.com/match-meta-info/mmi.bloom
 
 You can verify the integrity of the bloom filters by using the provided SHA256 hash values.
 
-https://static.matchmeta.info/gtfo.sha256
+https://dl.4n6ir.com/match-meta-info/gtfo.sha256
 
-https://static.matchmeta.info/mmi.sha256
+https://dl.4n6ir.com/match-meta-info/mmi.sha256
 
-It is available for download if you're interested in the raw data using API keys available through self-registration.
+Raw data is available for download if you want to use the artifacts elsewhere.
 
-https://store.lukach.io/l/sha256
+https://dl.4n6ir.com/?p=amazon-linux-pipeline/
 
 ### LAST UPDATED
 
@@ -57,13 +55,13 @@ mmi -u
 
 Or by hitting the provided website for the last updated timestamp.
 
-https://static.matchmeta.info/mmi.updated
+https://dl.4n6ir.com/match-meta-info/last.updated
 
 ### COUNTS
 
-https://static.matchmeta.info/mmi.count
+https://dl.4n6ir.com/match-meta-info/gtfo.count
 
-https://static.matchmeta.info/gtfo.count
+https://dl.4n6ir.com/match-meta-info/mmi.count
 
 ### DETECTIONS
 
@@ -126,3 +124,5 @@ pip install matchmeta
 ```
 python setup.py install --user
 ```
+
+![Match Meta Inforamtion (MMI)](images/mmi.png)
