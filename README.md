@@ -1,4 +1,6 @@
-# mmi
+# :construction: mmi :construction:
+
+## :crab: Rust Migration :crab:
 
 Metadata is the lowest-value indicator as easy to circumvent. Still, with the exponential volume of directories and files standard on default operating system installations, finding things hiding in plain sight has become an important analysis technique.
 
