@@ -12,17 +12,17 @@ Output:
 
 ### Visualizations
 
-- **BLUE** Known Meta Text :blue_square:
-- **GREEN** Known File Content :green_square:
-- **RED** Suspect Living Off Land :red_square:
+- **BLUE** Known Meta Text
+- **GREEN** Known File Content
+- **RED** Suspect Living Off Land
 
 ### Classifications
 
-- **DENIED** Permission Issue :red_square: (red)
+- **DENIED** Permission Issue (RED)
 - **DIRECTORY** Folder Path
 - **EMPTY** Empty File Hash
-- **ERROR** Content Hash Error :red_square: (red)
-- **LARGE** File Size 1+ GB :red_square: (red)
+- **ERROR** Content Hash Error (RED)
+- **LARGE** File Size 1+ GB (RED)
 - **ZERO** Zero File Size
 
 ### Help Command
@@ -101,4 +101,11 @@ curl https://sh.rustup.rs -sSf | sh -s -- -y
 source "$HOME/.cargo/env"
 ```
 
+### Installation
+
+```
+cargo install mmi
+```
+
 ![Match Meta Inforamtion (MMI)](images/mmi.png)
+mmi

@@ -2,7 +2,7 @@
 name = "mmi"
 description = "OS Triage for Anyone and Everyone"
 license = "Apache-2.0"
-version = "2025.2.1"
+version = "2025.2.2"
 edition = "2021"
 homepage = "https://4n6ir.com"
 repository = "https://github.com/jblukach/mmi"
