@@ -2,7 +2,9 @@
 
 Metadata is the lowest-value indicator as easy to circumvent. Still, with the exponential volume of directories and files standard on default operating system installations, finding things hiding in plain sight has become an important analysis technique.
 
-```cargo run```
+```
+cargo run
+```
 
 Output:
 
@@ -25,7 +27,9 @@ Output:
 
 ### Help Command
 
-```cargo run help```
+```
+cargo run help
+```
 
 Output:
 
@@ -33,9 +37,11 @@ Output:
 Commands: download, status, verify
 ```
 
-### Download Command
+### Required Files
 
-```cargo run```
+```
+cargo run
+```
 
 Output:
 
@@ -45,7 +51,11 @@ Required File: /workspaces/mmi/target/debug/mmi.poppy
 Download Link: https://github.com/jblukach/artifacts/releases
 ```
 
-```cargo run download```
+### Download Command
+
+```
+cargo run download
+```
 
 Output:
 
@@ -60,7 +70,9 @@ File Download: /workspaces/mmi/target/debug/verification.csv
 
 ### Status Command
 
-```cargo run status```
+```
+cargo run status
+```
 
 Output:
 
@@ -71,7 +83,9 @@ Estimate: 4071377 /workspaces/mmi/target/debug/mmi.poppy
 
 ### Verify Command
 
-```cargo run verify```
+```
+cargo run verify
+```
 
 Output:
 
@@ -82,8 +96,9 @@ Verified: /workspaces/mmi/target/debug/lol.poppy
 
 ### Requirement
 
-```curl https://sh.rustup.rs -sSf | sh -s -- -y```
-
-```source "$HOME/.cargo/env"```
+```
+curl https://sh.rustup.rs -sSf | sh -s -- -y
+source "$HOME/.cargo/env"
+```
 
 ![Match Meta Inforamtion (MMI)](images/mmi.png)
