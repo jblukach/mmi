@@ -108,4 +108,3 @@ cargo install mmi
 ```
 
 ![Match Meta Inforamtion (MMI)](images/mmi.png)
-mmi
