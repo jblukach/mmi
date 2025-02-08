@@ -3,7 +3,7 @@
 Metadata is the lowest-value indicator as easy to circumvent. Still, with the exponential volume of directories and files standard on default operating system installations, finding things hiding in plain sight has become an important analysis technique.
 
 ```
-cargo run
+mmi
 ```
 
 Output:
@@ -28,7 +28,7 @@ Output:
 ### Help Command
 
 ```
-cargo run help
+mmi help
 ```
 
 Output:
@@ -40,7 +40,7 @@ Commands: download, status, verify
 ### Required Files
 
 ```
-cargo run
+mmi
 ```
 
 Output:
@@ -54,7 +54,7 @@ Download Link: https://github.com/jblukach/artifacts/releases
 ### Download Command
 
 ```
-cargo run download
+mmi download
 ```
 
 Output:
@@ -71,7 +71,7 @@ File Download: /workspaces/mmi/target/debug/verification.csv
 ### Status Command
 
 ```
-cargo run status
+mmi status
 ```
 
 Output:
@@ -84,7 +84,7 @@ Estimate: 4071377 /workspaces/mmi/target/debug/mmi.poppy
 ### Verify Command
 
 ```
-cargo run verify
+mmi verify
 ```
 
 Output:
