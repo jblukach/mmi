@@ -94,7 +94,7 @@ Verified: /workspaces/mmi/target/debug/mmi.poppy
 Verified: /workspaces/mmi/target/debug/lol.poppy
 ```
 
-### Requirement
+### Dependency
 
 ```
 curl https://sh.rustup.rs -sSf | sh -s -- -y
