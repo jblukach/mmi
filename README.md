@@ -10,19 +10,21 @@ Output:
 
 ![Match Meta Inforamtion (MMI) Output](images/cli.jpg)
 
+Legitimate files found on default OS installations that threat actors can potentially use to perform malicious intent are flagged; this technique is known as living off the land (LOL).
+
 ### Visualizations
 
 - **BLUE** Known Meta Text
 - **GREEN** Known File Content
-- **RED** Suspect Living Off Land
+- **RED** Potentially Suspect
 
 ### Classifications
 
-- **DENIED** Permission Issue (RED)
+- **DENIED** Permission Issue
 - **DIRECTORY** Folder Path
 - **EMPTY** Empty File Hash
-- **ERROR** Content Hash Error (RED)
-- **LARGE** File Size 1+ GB (RED)
+- **ERROR** Content Hash Error
+- **LARGE** File Size 1+ GB
 - **ZERO** Zero File Size
 
 ### Help Command
