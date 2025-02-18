@@ -8,7 +8,7 @@ mmi
 
 Output:
 
-![Match Meta Inforamtion (MMI) Output](images/cli.jpg)
+![Match Meta Inforamtion (MMI) Output](images/cli.png)
 
 Legitimate files found on default OS installations that threat actors can potentially use to perform malicious intent are flagged; this technique is known as living off the land (LOL).
 
@@ -20,6 +20,7 @@ Legitimate files found on default OS installations that threat actors can potent
 
 - **BLUE** Known Meta Text
 - **GREEN** Known File Content
+- **MAGENTA** Full Path NOT Matched
 - **RED** Potentially Suspect
 
 ### Classifications

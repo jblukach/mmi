@@ -29,15 +29,15 @@ fn main() {
                         let fullpath = directory.join(&filename);
                         let b3dir;
                         let b3path;
-                        let mut seperator: String;
+                        let mut separator: String;
                         if cfg!(target_os = "windows") {
                             b3path = mmi::b3windows(fullpath.display().to_string());
                             b3dir = mmi::b3windows(directory.display().to_string());
-                            seperator = "\\".to_string();
+                            separator = "\\".to_string();
                         } else {
                             b3path = mmi::b3unix(fullpath.display().to_string());    
                             b3dir = mmi::b3unix(directory.display().to_string());
-                            seperator = "/".to_string();
+                            separator = "/".to_string();
                         }
                         let b3name = mmi::b3text(filename.to_string_lossy().to_string());
                         let mut b3hash;
@@ -66,39 +66,42 @@ fn main() {
                                 }
                             }
                         }
-                        if mmipoppy.contains(&b3hash) == true {
-                            b3hash = b3hash.green().to_string();
-                        } else if lolpoppy.contains(&b3hash) == true {
+                        if lolpoppy.contains(&b3hash) == true {
                             b3hash = b3hash.red().to_string();
+                        } else if mmipoppy.contains(&b3hash) == true {
+                            b3hash = b3hash.green().to_string();
                         } else {
                             b3hash = b3hash;
                         }
                         let mut directory = directory.display().to_string();
                         let mut filename = filename.to_string_lossy().to_string();
-                        if mmipoppy.contains(&b3path) == true {
-                            directory = directory.cyan().to_string();
-                            seperator = seperator.cyan().to_string();
-                            filename = filename.cyan().to_string();
-                        } else if lolpoppy.contains(&b3path) == true {
+                        if lolpoppy.contains(&b3path) == true {
                             directory = directory.red().to_string();
-                            seperator = seperator.red().to_string();
+                            separator = separator.red().to_string();
                             filename = filename.red().to_string();
+                        } else if mmipoppy.contains(&b3path) == true {
+                            directory = directory.cyan().to_string();
+                            separator = separator.cyan().to_string();
+                            filename = filename.cyan().to_string();
                         } else {
-                            seperator = seperator;
+                            separator = separator;
                             if mmipoppy.contains(&b3dir) == true {
                                 directory = directory.cyan().to_string();
+                                separator = separator.magenta().to_string();
                             } else {
                                 directory = directory;
                             }
-                            if mmipoppy.contains(&b3name) == true {
-                                filename = filename.cyan().to_string();
-                            } else if lolpoppy.contains(&b3name) == true {
+                            if lolpoppy.contains(&b3name) == true {
+                                separator = separator.magenta().to_string();
                                 filename = filename.red().to_string();
+                            } else if mmipoppy.contains(&b3name) == true {
+                                separator = separator.magenta().to_string();
+                                filename = filename.cyan().to_string();
                             } else {
                                 filename = filename;
                             }
                         }
-                        println!("{} {}{}{}", b3hash, directory, seperator, filename);
+                        println!("{} {}{}{}", b3hash, directory, separator, filename);
                     }
                 }
             }

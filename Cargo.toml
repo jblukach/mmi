@@ -2,14 +2,14 @@
 name = "mmi"
 description = "OS Triage for Anyone and Everyone"
 license = "Apache-2.0"
-version = "2025.2.9"
+version = "2025.2.17"
 edition = "2021"
 homepage = "https://4n6ir.com"
 repository = "https://github.com/jblukach/mmi"
 readme = "README.md"
 
 [dependencies]
-blake3 = "1.5.5"
+blake3 = "1.6.0"
 colored = "3.0.0"
 csv = "1.3.1"
 poppy-filters = "0.2.0"
