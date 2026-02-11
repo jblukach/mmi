@@ -8,13 +8,11 @@ mmi
 
 Output:
 
-![Match Meta Inforamtion (MMI) Output](images/cli.png)
+![Match Meta Inforamtion (MMI) Output](cli.png)
 
 Legitimate files found on default OS installations that threat actors can potentially use to perform malicious intent are flagged; this technique is known as living off the land (LOL).
 
 - https://gtfobins.github.io
-- https://lolbas-project.github.io
-- https://www.loobins.io
 
 ### Visualizations
 
@@ -113,5 +111,3 @@ source "$HOME/.cargo/env"
 ```
 cargo install mmi
 ```
-
-![Match Meta Inforamtion (MMI)](images/mmi.png)

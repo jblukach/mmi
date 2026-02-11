@@ -60,8 +60,6 @@ fn main() {
                                         b3hash = "  -- EMPTY --                                                   ".to_string();
                                     } else if b3hash == "ERROR" {
                                         b3hash = "  -- ERROR --                                                   ".red().to_string();
-                                    } else {
-                                        b3hash = b3hash;
                                     }
                                 }
                             }
@@ -70,8 +68,6 @@ fn main() {
                             b3hash = b3hash.red().to_string();
                         } else if mmipoppy.contains(&b3hash) == true {
                             b3hash = b3hash.green().to_string();
-                        } else {
-                            b3hash = b3hash;
                         }
                         let mut directory = directory.display().to_string();
                         let mut filename = filename.to_string_lossy().to_string();
@@ -84,12 +80,9 @@ fn main() {
                             separator = separator.cyan().to_string();
                             filename = filename.cyan().to_string();
                         } else {
-                            separator = separator;
                             if mmipoppy.contains(&b3dir) == true {
                                 directory = directory.cyan().to_string();
                                 separator = separator.magenta().to_string();
-                            } else {
-                                directory = directory;
                             }
                             if lolpoppy.contains(&b3name) == true {
                                 separator = separator.magenta().to_string();
@@ -97,8 +90,6 @@ fn main() {
                             } else if mmipoppy.contains(&b3name) == true {
                                 separator = separator.magenta().to_string();
                                 filename = filename.cyan().to_string();
-                            } else {
-                                filename = filename;
                             }
                         }
                         println!("{} {}{}{}", b3hash, directory, separator, filename);
